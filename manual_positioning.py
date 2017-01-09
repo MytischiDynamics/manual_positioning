@@ -1,5 +1,5 @@
 from main_window import Ui_MainWindow
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QFrame, QLabel
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QFrame, QLabel, QFileDialog
 from PyQt5.QtGui import QPixmap, QDrag, QPainter, QColor, QPen
 from PyQt5.QtCore import Qt, QDataStream, QIODevice, QPoint, QByteArray, QMimeData
 
@@ -137,7 +137,7 @@ if __name__ == '__main__':
     window = QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(window)
-
+    ui.actionSelect_Folder.triggered.connect(selectFolder)
     ui.VerticalLayout_Image.addWidget(DragWidget())
 
     window.show()
