@@ -1,3 +1,5 @@
+import glob
+import os
 from main_window import Ui_MainWindow
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QFrame, QLabel, QFileDialog
 from PyQt5.QtGui import QPixmap, QDrag, QPainter, QColor, QPen
@@ -104,8 +106,6 @@ class DragWidget(QFrame) :
             child.show()
             child.setPixmap(pixmap)
 
-#    dragMoveEvent = dragEnterEvent
-
     def dropEvent(self, event):
         if event.mimeData().hasFormat('application/x-dnditemdata'):
             itemData = event.mimeData().data('application/x-dnditemdata')
@@ -130,10 +130,39 @@ class DragWidget(QFrame) :
         else:
             event.ignore()
 
+class MyWindow(QMainWindow) :
+    def __init__(self, parent = None):
+        QWidget.__init__(self, parent)
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+        self.dw = DragWidget()
+        self.ui.VerticalLayout_Image.addWidget(self.dw)
+        self.ui.actionSelect_Folder.triggered.connect(self.selectFolder)
+        self.working_dir = '.'
+#        self.getImageList()
+
+    def selectFolder(self):
+        self.working_dir = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+
+    def getImageList(self):
+        while True :
+            self.image_list = glob.glob(os.path.join(self.working_dir,"*.jpg"))
+            if len(self.image_list) == 0 :
+                break
+            else :
+                self.dw.SetBackground(self.image_list[0])
+
 if __name__ == '__main__':
     import sys
 
     app = QApplication(sys.argv)
+    myapp = MyWindow()
+    myapp.show()
+    sys.exit(app.exec_())
+
+
+
+'''
     window = QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(window)
@@ -143,3 +172,4 @@ if __name__ == '__main__':
     window.show()
 
     sys.exit(app.exec_())
+'''
